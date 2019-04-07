@@ -5,11 +5,14 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const users = require('./controllers/users');
 const products = require('./controllers/products');
+const city = require('./controllers/city');
 const jwtAuth = require('./middlewares/jwt-auth');
 const LocalStrategy = require('passport-local').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const GoogleStrategy = require('passport-google-oauth2').Strategy;
+const mongoose = require('mongoose');
 
+require('./config/mongo')();
 
 const app = express();
 
@@ -156,7 +159,13 @@ app.get('/', function (req, res) {
     res.end();
 });
 
+
 app.get('/api/users', users.all);
+
+app.get('/api/city', city.all);
+app.post('/api/city', city.createPreConfigured);
+app.delete('/api/city/:id', city.deleteById);
+app.put('/api/city/:id', city.createOrUpdate);
 
 app.get('/api/products', products.all);
 app.get('/api/products/:id', products.getProductById);

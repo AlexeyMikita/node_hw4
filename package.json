@@ -4,7 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seq_migrate": "sequelize db:migrate",
+    "seq_migrate_undo": "sequelize db:migrate:undo",
+    "seq_seeds_all": "sequelize db:seed:all",
+    "seq_seeds_undo": "sequelize db:seed:undo:all",
+    "seq_generate_default_user": "sequelize model:generate --name Product --attributes displayName:string,description:string",
+    "seq_generate_default_product": "sequelize model:generate --name Product --attributes displayName:string,description:string",
+    "seq_generate_default_user_seed": "sequelize seed:generate --name demo-user",
+    "seq_generate_default_product_seed": "sequelize seed:generate --name demo-product"
   },
   "author": "alexm",
   "license": "ISC",
@@ -18,8 +26,13 @@
     "nodemon": "^1.18.10",
     "passport": "^0.4.0",
     "passport-facebook": "^3.0.0",
+    "passport-google-oauth": "^2.0.0",
+    "passport-google-oauth2": "^0.2.0",
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.4",
-    "request": "^2.88.0"
+    "pg": "^7.9.0",
+    "request": "^2.88.0",
+    "sequelize": "^5.2.12",
+    "sequelize-cli": "^5.4.0"
   }
 }

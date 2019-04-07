@@ -8,6 +8,7 @@ const products = require('./controllers/products');
 const jwtAuth = require('./middlewares/jwt-auth');
 const LocalStrategy = require('passport-local').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
+const GoogleStrategy = require('passport-google-oauth2').Strategy;
 
 
 const app = express();
@@ -15,6 +16,7 @@ const app = express();
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(passport.initialize());
 
 app.use((req, res, next) => {
     req.parsedCookies = req.cookies;
@@ -28,7 +30,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(['/api/products', '/api/users'], jwtAuth);
+//app.use(['/api/products', '/api/users'], jwtAuth);
 
 const user = {
     id: '123456',
@@ -71,6 +73,14 @@ app.post('/auth',
     },
 );
 
+passport.serializeUser(function(user, done) {
+    done(null, user);
+  });
+  
+  passport.deserializeUser(function(user, done) {
+    done(null, user);
+  });
+
 passport.use('local', new LocalStrategy(
     {
         usernameField: 'login',
@@ -89,7 +99,7 @@ passport.use(new FacebookStrategy (
     {
         clientID: '2258272314415413',
         clientSecret: 'b44570a4f128c3360cdc44eff3480f43',
-        callbackURL: 'http://127.0.0.1:8080/passport-facebook/callback'
+        callbackURL: 'http://localhost:3000/passport-facebook/callback'
     }, function(req, accessToken, refreshToken, profile, done) {
         console.log(profile);
 
@@ -108,6 +118,28 @@ app.get('/passport-facebook/callback',
         })
 );
 
+passport.use(new GoogleStrategy(
+    {
+        clientID: '615674921520-da4rfngjc23p754ucg14keqd784e6m7j.apps.googleusercontent.com',
+        clientSecret: 'ateDh1pLVHp4CFBWHqFZS1OB',
+        callbackURL: 'http://localhost:3000/passport-google/callback',
+        passReqToCallback: true
+    }, function(req, accessToken, refreshToken, profile, done) {
+        console.log(profile);
+
+        return done(null, profile);
+    }
+));
+
+app.get('/passport-google', passport.authenticate('google', { scope: ['email profile'] }));
+
+app.get('/passport-google/callback', 
+    passport.authenticate('google', 
+        {
+            successRedirect: '/auth/passport-success',
+            failureRedirect: '/auth/passport-error'
+        })
+);
 
 
 app.post(

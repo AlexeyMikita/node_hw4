@@ -1,0 +1,145 @@
+swagger: '2.0'
+info:
+  description: This is a simple API nodejs training
+  version: 1.0.0
+  title: Simple City API
+  # put the contact info for your development or API team
+  contact:
+    email: alexei.mikita@gmail.com
+
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+# tags are used for organizing operations
+tags:
+- name: admins
+  description: Secured Admin-only calls
+- name: developers
+  description: Operations available to regular developers
+
+paths:
+  /:
+    get:
+      tags:
+      - developers
+      summary: hello world
+      operationId: helloWorld
+      description: |
+        print hello world
+      produces:
+      - text/html
+      responses:
+        200:
+          description: print hello world
+          schema:
+            type: string
+
+  /api/city:
+    get:
+      tags:
+      -   developers
+      summary: return all city
+      operationId: allCity
+      description: |
+        return all city
+      produces: 
+      - application/json
+      responses:
+        200:
+          description: return all city from source
+          schema: 
+            type: array
+            items: 
+              $ref: '#/definitions/City'
+
+  /api/city/{id}:
+    put:
+      tags:
+      -   developers
+      summary: Updates Single city by id if exists or adds New city with given id otherwise
+      operationId: putCityById
+      description: |
+        Updates Single city by id if exists or adds New city with given id otherwise
+      produces: 
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: test
+        required: true
+        type: string
+      responses:
+        200:
+          description: return city
+          schema: 
+            $ref: '#/definitions/City'
+    delete:
+      tags:
+      -   developers
+      summary: Delete city by external_id
+      operationId: deleteCityById
+      description: |
+        Delete city by external_id, return external_id on success delete, error - otherwise
+      produces: 
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: test
+        required: true
+        type: string
+      responses:
+        200:
+          description: return external_id of deleted item
+          schema: 
+            type: string
+        400:
+          description: return error
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+                example: Some error message
+
+definitions:
+  City:
+    type: object
+    required:
+    - external_id
+    - name
+    properties:
+      external_id:
+        type: string
+        example: "10001"
+      name:
+        type: string
+        example: "Minsk"
+      country:
+        type: string
+        example: "Belarus"
+      capital:
+        type: boolean
+        example: true
+      location:
+        type: array
+        items:
+          type: object
+          properties:
+            lat: 
+              type: number
+              example: 52.097621
+            lan:
+              type: number
+              example: 23.734050
+      lastModifiedDate:
+        type: string
+        format: date
+
+
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /AlexeyMikita/Nodejs-training/1.0.0
+schemes:
+ - https
